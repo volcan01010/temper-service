@@ -5,13 +5,14 @@ import os
 from flask import Flask
 from flask_restful import Api
 
+app = Flask(__name__)
 
-def create_app():
-    """ Bootstrap function to initialise the Flask app and config """
-    app = Flask(__name__)
+
+def bootstrap_app():
+    """ Bootstrap function to initialise the Flask temper_app and config """
 
     env = os.getenv('TEMPER_SERVICE_ENV', 'Dev')  # default to Dev if config environment var not set
-    app.config.from_object('app.config.{0}Config'.format(env))
+    app.config.from_object('temper_app.config.{0}Config'.format(env))
 
     initialise_logger(app)
     app.logger.debug("Starting temper-service.")
@@ -46,8 +47,8 @@ def init_flask_restful_routes(app):
     app.logger.info('Initialising API Routes')
     api = Api(app)
 
-    from app.api.hello_api import HelloAPI, CalcAPI
-    from app.api.temper_api import TemperAPI
+    from temper_app.api.hello_api import HelloAPI, CalcAPI
+    from temper_app.api.temper_api import TemperAPI
 
     api.add_resource(HelloAPI, '/hello')
     api.add_resource(CalcAPI, '/calculate')

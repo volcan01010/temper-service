@@ -1,7 +1,7 @@
 from flask_script import Manager
-from app import create_app
+from temper_app import bootstrap_app
 
-app = create_app()
+app = bootstrap_app()
 manager = Manager(app)
 
 if __name__ == '__main__':

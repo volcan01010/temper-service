@@ -1,5 +1,7 @@
 from flask_restful import Resource
 
+from temper_app import app
+
 
 class TemperAPI(Resource):
 
@@ -17,5 +19,6 @@ class TemperAPI(Resource):
             500:
                 description: Internal Server Error
         """
+        app.logger.debug("Temper endpoint hit")
         return {"hello": "Temper API"}, 200
 
