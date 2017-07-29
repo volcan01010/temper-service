@@ -6,3 +6,5 @@ probes.
 Code assumes temper-poll installed at /usr/bin/temper-poll.
 
 Configured for external probe (sensor = 1).
+
+Microservice architecture based on https://github.com/thinkWhere/geopython17
