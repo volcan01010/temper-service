@@ -1,0 +1,11 @@
+# Python
+*.pyc
+
+# Virtual environment
+py36
+
+# Pycharm
+.idea
+
+# Log files
+logs
