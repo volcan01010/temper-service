@@ -3,44 +3,32 @@ import subprocess
 from temper_app import app
 
 
-def get_temperature(sensor):
+def get_temperature():
     """
     Return the temperature recorded at the chosen sensor
-    :param sensor: Sensor name (can be 'probe' or 'sensor')
     :return: float, temperature in degrees Celcius
     """
     # Increment call count
-    msg = "get_temperature called with {}".format(sensor)
+    msg = "get_temperature called"
     app.logger.debug(msg)
-
-    # Check sensor name
-    try:
-        assert sensor in ('probe', 'sensor')
-    except AssertionError:
-        msg = "Bad sensor name: must be 'probe' or 'sensor"
-        app.logger.debug(msg)
-        raise TemperBadSensorNameError(msg)
-
-    sensor_numbers = {'sensor': '0',
-                      'probe': '1'}
 
     # Get the temperature
     try:
         temperature = subprocess.check_output(
-            ['/usr/local/bin/temper-poll', '-c', '-s', sensor_numbers[sensor]])
-    except subprocess.SubprocessError as e:
-        msg = str(e.args)
+            ['/usr/local/bin/temper-poll', '-c', '-s', '1'])
+    except FileNotFoundError as e:
+        msg = "temper-poll script not found: {}".format(e.strerror)
         app.logger.debug(msg)
-        raise TemperBadSensorNameError(msg)
+        raise TemperSubProcessError(msg)
+
+    try:
+        temperature = float(temperature)
+    except ValueError:
+        msg = "No valid temperature returned.  Check sensor is connected."
+        app.logger.debug(msg)
+        raise TemperSubProcessError(msg)
 
     return temperature
-
-
-class TemperBadSensorNameError(BaseException):
-    """
-    Raised when bad temperature sensor name is passed.
-    """
-    pass
 
 
 class TemperSubProcessError(BaseException):
